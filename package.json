@@ -1,0 +1,24 @@
+{
+  "name": "fookit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/udu3324/fookit.git"
+  },
+  "author": "udu3324",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/udu3324/fookit/issues"
+  },
+  "homepage": "https://github.com/udu3324/fookit#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "pixi.js": "^7.2.4",
+    "ws": "^8.13.0"
+  }
+}
