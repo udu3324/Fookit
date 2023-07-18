@@ -2,11 +2,50 @@
 <html>
   <head>
     <title>Fookit</title>
-    <link rel="stylesheet" href="css/index.css">
+    <link href="css/output.css" rel="stylesheet">
   </head>
   <body>
-    <div id="game-container"></div>
-    hello
+    <div id="game-container" class="w-screen h-screen">
+      <div id="main-menu">
+        <div id="main-menu-layout" class="grid grid-cols-5 grid-flow-col place-content-center h-screen">
+          <div>
+            <h1 class="text-2xl font-bold">
+              nothing
+            </h1>
+          </div>
+          <div class="place-self-center">
+            <h1 class="text-2xl font-bold">
+              fookit
+            </h1>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold">
+              nothing
+            </h1>
+          </div>
+          <div class="place-self-center">
+            <div>
+              <button id="main-menu-join-btn" class="bg-slate-500">join kitchen</button>
+              <br>
+              <button id="main-menu-create-btn" class="bg-slate-500">create kitchen</button>
+            </div>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold">
+              nothing
+            </h1>
+          </div>
+        </div>
+        <div id="main-menu-join-div" class="grid fixed top-1 left-1 right-1 bottom-1 pointer-events-none">
+          <div class="bg-slate-300 place-self-center pointer-events-auto">
+            hi
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="js/index.js"></script>
+    <script src="js/main_menu.js"></script>
+    <script src="js/resize.js"></script>
   </body>
 </html>
