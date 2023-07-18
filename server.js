@@ -1,6 +1,5 @@
 const express = require('express');
 const WebSocket = require('ws');
-const PIXI = require('pixi.js');
 
 const path = require('path');
 const app = express();
@@ -29,6 +28,3 @@ wss.on('connection', (ws) => {
     // Clean up resources
   });
 });
-
-//serve pixijs to users
-app.use('/pixi', express.static(path.join(__dirname, 'node_modules/pixi.js/dist')));
