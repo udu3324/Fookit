@@ -8,7 +8,7 @@ function resizeCanvas() {
     console.log(`Resizing to ${window.innerWidth}x${window.innerHeight}!`)
     
     //basic check if window is portrait
-    const mainMenu = document.getElementById('main-menu-layout');
+    const mainMenu = document.getElementById('mm-layout');
     if (window.innerHeight > window.innerWidth) {
         console.log("user is portrait!!!")
 

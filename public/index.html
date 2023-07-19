@@ -6,8 +6,8 @@
   </head>
   <body>
     <div id="game-container" class="w-screen h-screen">
-      <div id="main-menu">
-        <div id="main-menu-layout" class="grid grid-cols-5 grid-flow-col place-content-center h-screen">
+      <div id="mm">
+        <div id="mm-layout" class="grid grid-cols-5 grid-flow-col place-content-center h-screen">
           <div>
             <h1 class="text-2xl font-bold">
               nothing
@@ -25,9 +25,9 @@
           </div>
           <div class="place-self-center">
             <div>
-              <button id="main-menu-join-btn" class="bg-slate-500">join kitchen</button>
+              <button id="mm-join-btn" class="bg-slate-500">join kitchen</button>
               <br>
-              <button id="main-menu-create-btn" class="bg-slate-500">create kitchen</button>
+              <button id="mm-create-btn" class="bg-slate-500">create kitchen</button>
             </div>
           </div>
           <div>
@@ -36,35 +36,35 @@
             </h1>
           </div>
         </div>
-        <div id="main-menu-join-div" class="hidden grid fixed top-1 left-1 right-1 bottom-1 pointer-events-none">
+        <div id="mm-join-div" class="hidden grid fixed top-1 left-1 right-1 bottom-1 pointer-events-none">
           <div class="pr-14 grid grid-rows-6 bg-slate-300 place-self-center pointer-events-auto">
             <div>
-              <button id="main-menu-join-close-btn" class="btn-mm-code bg-slate-600">x</button>
+              <button id="mm-join-close-btn" class="btn-mm-code bg-slate-600">x</button>
             </div>
             <div class="pl-14">
-              <button id="" class="btn-mm-code bg-slate-500">c</button>
-              <button id="" class="btn-mm-code bg-slate-500">c</button>
-              <button id="" class="btn-mm-code bg-slate-500">c</button>
-              <button id="" class="btn-mm-code bg-slate-500">c</button>
-              <button id="" class="btn-mm-code bg-slate-500">c</button>
+              <button id="mm-dc-1" class="btn-mm-code rounded-full pointer-events-none bg-slate-500"></button>
+              <button id="mm-dc-2" class="btn-mm-code rounded-full pointer-events-none bg-slate-500"></button>
+              <button id="mm-dc-3" class="btn-mm-code rounded-full pointer-events-none bg-slate-500"></button>
+              <button id="mm-dc-4" class="btn-mm-code rounded-full pointer-events-none bg-slate-500"></button>
+              <button id="mm-dc-5" class="btn-mm-code rounded-full pointer-events-none bg-slate-500"></button>
             </div>
             <div class="pl-14">
               <button class="btn-mm-code bg-slate-600">y</button>
               <button class="btn-mm-code bg-slate-600">n</button>
             </div>
             <div class="pl-14">
-              <button id="1" class="btn-mm-code bg-slate-500">1</button>
-              <button id="2" class="btn-mm-code bg-slate-500">2</button>
-              <button id="3" class="btn-mm-code bg-slate-500">3</button>
-              <button id="4" class="btn-mm-code bg-slate-500">4</button>
-              <button id="5" class="btn-mm-code bg-slate-500">5</button>
+              <button id="mm-c-1" class="btn-mm-code bg-slate-500">1</button>
+              <button id="mm-c-2" class="btn-mm-code bg-slate-500">2</button>
+              <button id="mm-c-3" class="btn-mm-code bg-slate-500">3</button>
+              <button id="mm-c-4" class="btn-mm-code bg-slate-500">4</button>
+              <button id="mm-c-5" class="btn-mm-code bg-slate-500">5</button>
             </div>
             <div class="pl-14">
-              <button id="6" class="btn-mm-code bg-slate-600">6</button>
-              <button id="7" class="btn-mm-code bg-slate-600">7</button>
-              <button id="8" class="btn-mm-code bg-slate-600">8</button>
-              <button id="9" class="btn-mm-code bg-slate-600">9</button>
-              <button id="0" class="btn-mm-code bg-slate-600">0</button>
+              <button id="mm-c-6" class="btn-mm-code bg-slate-600">6</button>
+              <button id="mm-c-7" class="btn-mm-code bg-slate-600">7</button>
+              <button id="mm-c-8" class="btn-mm-code bg-slate-600">8</button>
+              <button id="mm-c-9" class="btn-mm-code bg-slate-600">9</button>
+              <button id="mm-c-0" class="btn-mm-code bg-slate-600">0</button>
             </div>
           </div>
         </div>

@@ -569,6 +569,18 @@ video {
   top: 0.25rem;
 }
 
+.m-auto {
+  margin: auto;
+}
+
+.block {
+  display: block;
+}
+
+.flex {
+  display: flex;
+}
+
 .grid {
   display: grid;
 }
@@ -583,10 +595,6 @@ video {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-24 {
-  width: 6rem;
 }
 
 .resize {
@@ -613,8 +621,16 @@ video {
   place-content: center;
 }
 
+.place-items-center {
+  place-items: center;
+}
+
 .place-self-center {
   place-self: center;
+}
+
+.rounded-full {
+  border-radius: 9999px;
 }
 
 .bg-slate-300 {
@@ -638,6 +654,10 @@ video {
 
 .pr-14 {
   padding-right: 3.5rem;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .text-2xl {
