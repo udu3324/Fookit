@@ -534,6 +534,13 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.btn-mm-code {
+  float: left;
+  margin: 0.25rem;
+  height: 3rem;
+  width: 3rem;
+}
+
 .pointer-events-none {
   pointer-events: none;
 }
@@ -546,16 +553,8 @@ video {
   position: fixed;
 }
 
-.absolute {
-  position: absolute;
-}
-
-.relative {
-  position: relative;
-}
-
-.inset-0 {
-  inset: 0px;
+.bottom-1 {
+  bottom: 0.25rem;
 }
 
 .left-1 {
@@ -570,44 +569,24 @@ video {
   top: 0.25rem;
 }
 
-.bottom-1 {
-  bottom: 0.25rem;
-}
-
-.z-0 {
-  z-index: 0;
-}
-
-.z-10 {
-  z-index: 10;
-}
-
-.flex {
-  display: flex;
-}
-
 .grid {
   display: grid;
+}
+
+.hidden {
+  display: none;
 }
 
 .h-screen {
   height: 100vh;
 }
 
-.h-96 {
-  height: 24rem;
-}
-
 .w-screen {
   width: 100vw;
 }
 
-.w-96 {
-  width: 24rem;
-}
-
-.w-full {
-  width: 100%;
+.w-24 {
+  width: 6rem;
 }
 
 .resize {
@@ -618,45 +597,24 @@ video {
   grid-auto-flow: column;
 }
 
-.grid-flow-row-dense {
-  grid-auto-flow: row dense;
-}
-
 .grid-cols-5 {
   grid-template-columns: repeat(5, minmax(0, 1fr));
-}
-
-.grid-rows-4 {
-  grid-template-rows: repeat(4, minmax(0, 1fr));
 }
 
 .grid-rows-5 {
   grid-template-rows: repeat(5, minmax(0, 1fr));
 }
 
+.grid-rows-6 {
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+}
+
 .place-content-center {
   place-content: center;
 }
 
-.items-center {
-  align-items: center;
-}
-
-.justify-center {
-  justify-content: center;
-}
-
-.gap-4 {
-  gap: 1rem;
-}
-
 .place-self-center {
   place-self: center;
-}
-
-.bg-slate-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(100 116 139 / var(--tw-bg-opacity));
 }
 
 .bg-slate-300 {
@@ -664,28 +622,22 @@ video {
   background-color: rgb(203 213 225 / var(--tw-bg-opacity));
 }
 
-.bg-gray-200 {
+.bg-slate-500 {
   --tw-bg-opacity: 1;
-  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+  background-color: rgb(100 116 139 / var(--tw-bg-opacity));
 }
 
-.bg-gray-400 {
+.bg-slate-600 {
   --tw-bg-opacity: 1;
-  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
+  background-color: rgb(71 85 105 / var(--tw-bg-opacity));
 }
 
-.font-serif {
-  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+.pl-14 {
+  padding-left: 3.5rem;
 }
 
-.text-3xl {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-}
-
-.text-4xl {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
+.pr-14 {
+  padding-right: 3.5rem;
 }
 
 .text-2xl {
@@ -695,14 +647,6 @@ video {
 
 .font-bold {
   font-weight: 700;
-}
-
-.italic {
-  font-style: italic;
-}
-
-.underline {
-  text-decoration-line: underline;
 }
 
 /* remove the default padding */

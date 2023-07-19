@@ -11,3 +11,10 @@
 body {
     overflow: hidden; /* Hide scrollbars */
 }
+
+
+@layer components {
+    .btn-mm-code {
+        @apply float-left w-12 h-12 m-1;
+    }
+}
