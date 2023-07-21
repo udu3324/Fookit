@@ -1,3 +1,5 @@
+const socket = io();
+
 // Debounce function to control the rate at which the resizeCanvas function is called
 function debounce(func, delay) {
   let timeoutId;
