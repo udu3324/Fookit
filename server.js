@@ -29,9 +29,16 @@ io.on('connection', (socket) => {
     io.emit('message', data);
   });
 
-  socket.on('join_kitchen_enter_code', (data) => {
-    console.log('join_kitchen_enter_code:', data);
+  socket.on('join_kitchen_code', (code) => {
+    console.log('join_kitchen_code:', code);
     
+    if (code.length !== 5) {
+      socket.emit('join_kitchen_code_response', "wrong_length");
+      return
+    }
+
+    // Sending back the response
+    socket.emit("join_kitchen_code_response", "good!");
   });
 });
 

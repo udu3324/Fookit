@@ -1,9 +1,12 @@
-const mmJoinBtn = document.getElementById('mm-join-btn')
 const mmCreateBtn = document.getElementById('mm-create-btn')
+const mmCreateKitchenDiv = document.getElementById('mm-create-div')
+const mmCreateCancelBtn = document.getElementById('mm-create-cancel-btn')
 
+
+const mmJoinBtn = document.getElementById('mm-join-btn')
 const mmJoinKitchenDiv = document.getElementById('mm-join-div')
 const mmCloseJoinKitchenBtn = document.getElementById('mm-join-close-btn')
-
+const mmCodeErrText = document.getElementById('mm-c-error')
 const mmSubmitCodeBtn = document.getElementById('mm-c-submit')
 const mmRemoveCodeBtn = document.getElementById('mm-c-remove')
 
@@ -65,11 +68,41 @@ mmRemoveCodeBtn.addEventListener("click", function() {
 
 // send a request
 mmSubmitCodeBtn.addEventListener("click", function() {
-    console.log("ye")
-    socket.emit("join_kitchen_enter_code", currentCode)
+    if (currentCode.length < 5) {
+        mmCodeErrText.innerHTML = "Too short!"
+        return
+    }
+
+    if (currentCode.length > 5) {
+        mmCodeErrText.innerHTML = "Too long..?"
+        return
+    }
+
+    socket.emit("join_kitchen_code", currentCode)
+});
+
+socket.on("join_kitchen_code_response", (response) => {
+    console.log('join_kitchen_code_response:', response);
+    if (response !== "good") {
+        mmCodeErrText.innerHTML = response
+    } else {
+        mmCodeErrText.innerHTML = response
+    }
 });
 
 //create kitchen stuff
+let createKitchenOpen = false;
 mmCreateBtn.addEventListener("click", function() {
-    console.log("test2");
+    if (createKitchenOpen) {
+        createKitchenOpen = false
+        mmCreateKitchenDiv.classList.add('hidden')
+    } else {
+        createKitchenOpen = true
+        mmCreateKitchenDiv.classList.remove('hidden')
+    }
+});
+
+mmCreateCancelBtn.addEventListener("click", function() {
+    createKitchenOpen = false
+    mmCreateKitchenDiv.classList.add('hidden')
 });
