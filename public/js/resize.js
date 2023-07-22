@@ -10,12 +10,12 @@ function resizeCanvas() {
     //basic check if window is portrait
     const mainMenu = document.getElementById('mm-layout');
     if (window.innerHeight > window.innerWidth) {
-        console.log("user is portrait!!!")
+        console.log("user is portrait")
 
         mainMenu.classList.remove('grid-cols-5');
         mainMenu.classList.add('grid-rows-5');
     } else {
-        console.log("user is landscape!!!")
+        console.log("user is landscape")
 
         mainMenu.classList.remove('grid-rows-5');
         mainMenu.classList.add('grid-cols-5');

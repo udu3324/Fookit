@@ -1,6 +1,7 @@
 const mmCreateBtn = document.getElementById('mm-create-btn')
 const mmCreateKitchenDiv = document.getElementById('mm-create-div')
 const mmCreateCancelBtn = document.getElementById('mm-create-cancel-btn')
+const mmCreateCountText = document.getElementById('mm-chef-count')
 
 const mmCreateDisplayCode = [
     document.getElementById('mm-create-dc-1'),
@@ -112,20 +113,18 @@ mmCreateBtn.addEventListener("click", function() {
         leaveCreatedKitchen()
     } else {
         //open
-        createKitchenOpen = true
-        mmCreateKitchenDiv.classList.remove('hidden')
-        
         socket.emit("create_kitchen_code", callback => {
             console.log('create_kitchen_code:', callback);
             if (callback.includes("good")) {
+                //show the div
+                createKitchenOpen = true
+                mmCreateKitchenDiv.classList.remove('hidden')
+
                 //create the display
                 serverCreatedCode = callback.substring(4)
                 for (let i = 0; i < 5; i++) {
                     mmCreateDisplayCode[i].innerHTML = serverCreatedCode.charAt(i)
                 }
-            } else {
-                //error!
-
             }
         });
     }
@@ -142,6 +141,11 @@ mmCreateCancelBtn.addEventListener("click", function() {
 function leaveCreatedKitchen() {
     socket.emit("delete_kitchen_code", callback => {
         console.log('delete_kitchen_code:', callback);
-        
     });
 }
+
+//kitchen joined count change
+socket.on("join_kitchen_count_change", (count) => {
+    console.log(count + "/8")
+    mmCreateCountText.innerHTML = count + "/8"
+});

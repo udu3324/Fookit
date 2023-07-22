@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <div id="mm-join-div" class="hidden text-xl grid fixed top-1 left-1 right-1 bottom-1 pointer-events-none">
+        <div id="mm-join-div" class="hidden text-xl grid fixed top-0 left-0 right-0 bottom-0 pointer-events-none">
           <div class="pr-14 grid grid-rows-6 bg-slate-300 place-self-center pointer-events-auto">
             <div>
               <button id="mm-join-close-btn" class="btn-mm-code bg-slate-600">x</button>
@@ -72,7 +72,7 @@
           </div>
         </div>
         
-        <div id="mm-create-div" class="hidden text-xl grid fixed top-1 left-1 right-1 bottom-1 pointer-events-none">
+        <div id="mm-create-div" class="hidden text-xl grid fixed top-0 left-0 right-0 bottom-0 pointer-events-none">
           <div class="pr-14 grid grid-rows-4 bg-slate-300 place-self-center pointer-events-auto">
             <div>
               <button class="btn-mm-code pointer-events-none"></button>
@@ -88,10 +88,18 @@
             <div class="pl-14">
               <button class="float-left px-4 h-12 m-1 bg-slate-600">start</button>
               <button id="mm-create-cancel-btn" class="float-left px-4 h-12 m-1 bg-slate-600">cancel</button>
-              <p class="pt-3 text-center">1/8</p>
+              <p id="mm-chef-count" class="pt-3 text-center">1/8</p>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div id="disconnected" class="hidden fixed grid grid-rows-3 top-0 w-screen h-screen bg-red-500">
+      <div></div>
+      <div class="place-self-center text-white text-2xl m-3">
+        <p>you have disconnected. <br> press the button below to refresh the page.</p>
+        <button id="disconnected-refresh-btn" class="bg-red-700 px-3 pb-3 pt-1 mt-3">[refresh]</button>
       </div>
     </div>
 
