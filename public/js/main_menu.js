@@ -2,6 +2,15 @@ const mmCreateBtn = document.getElementById('mm-create-btn')
 const mmCreateKitchenDiv = document.getElementById('mm-create-div')
 const mmCreateCancelBtn = document.getElementById('mm-create-cancel-btn')
 
+const mmCreateDisplayCode = [
+    document.getElementById('mm-create-dc-1'),
+    document.getElementById('mm-create-dc-2'),
+    document.getElementById('mm-create-dc-3'),
+    document.getElementById('mm-create-dc-4'),
+    document.getElementById('mm-create-dc-5')
+];
+
+
 
 const mmJoinBtn = document.getElementById('mm-join-btn')
 const mmJoinKitchenDiv = document.getElementById('mm-join-div')
@@ -10,7 +19,7 @@ const mmCodeErrText = document.getElementById('mm-c-error')
 const mmSubmitCodeBtn = document.getElementById('mm-c-submit')
 const mmRemoveCodeBtn = document.getElementById('mm-c-remove')
 
-const displayCode = [
+const mmJoinDisplayCode = [
     document.getElementById('mm-dc-1'),
     document.getElementById('mm-dc-2'),
     document.getElementById('mm-dc-3'),
@@ -44,9 +53,9 @@ function handleCodeClick(event) {
 
     //take length of current code & see if its more than display
     const index = currentCode.length
-    if (index < displayCode.length) {
+    if (index < mmJoinDisplayCode.length) {
         //set the empty display to the set number
-        displayCode[index].innerHTML = number
+        mmJoinDisplayCode[index].innerHTML = number
 
         currentCode += number
     }
@@ -61,7 +70,7 @@ for (let i = 0; i <= 9; i++) {
 //removes one from the code
 mmRemoveCodeBtn.addEventListener("click", function() {
     if (currentCode.length > 0) {
-        displayCode[currentCode.length-1].innerHTML = ""
+        mmJoinDisplayCode[currentCode.length-1].innerHTML = ""
         currentCode = currentCode.substring(0, currentCode.length-1)
     }
 });
@@ -78,31 +87,61 @@ mmSubmitCodeBtn.addEventListener("click", function() {
         return
     }
 
-    socket.emit("join_kitchen_code", currentCode)
-});
-
-socket.on("join_kitchen_code_response", (response) => {
-    console.log('join_kitchen_code_response:', response);
-    if (response !== "good") {
-        mmCodeErrText.innerHTML = response
-    } else {
-        mmCodeErrText.innerHTML = response
-    }
+    socket.emit("join_kitchen_code", currentCode, callback => {
+        console.log('join_kitchen_code:', callback);
+        if (callback !== "good") {
+            // error!
+            mmCodeErrText.innerHTML = callback
+        } else {
+            // continue on
+            mmCodeErrText.innerHTML = callback
+        }
+    });
 });
 
 //create kitchen stuff
-let createKitchenOpen = false;
+let createKitchenOpen = false
+let serverCreatedCode = ""
+
 mmCreateBtn.addEventListener("click", function() {
     if (createKitchenOpen) {
+        //close
         createKitchenOpen = false
         mmCreateKitchenDiv.classList.add('hidden')
+
+        leaveCreatedKitchen()
     } else {
+        //open
         createKitchenOpen = true
         mmCreateKitchenDiv.classList.remove('hidden')
+        
+        socket.emit("create_kitchen_code", callback => {
+            console.log('create_kitchen_code:', callback);
+            if (callback.includes("good")) {
+                //create the display
+                serverCreatedCode = callback.substring(4)
+                for (let i = 0; i < 5; i++) {
+                    mmCreateDisplayCode[i].innerHTML = serverCreatedCode.charAt(i)
+                }
+            } else {
+                //error!
+
+            }
+        });
     }
 });
 
+//cancel kitchen creation
 mmCreateCancelBtn.addEventListener("click", function() {
     createKitchenOpen = false
     mmCreateKitchenDiv.classList.add('hidden')
+
+    leaveCreatedKitchen()
 });
+
+function leaveCreatedKitchen() {
+    socket.emit("delete_kitchen_code", callback => {
+        console.log('delete_kitchen_code:', callback);
+        
+    });
+}
