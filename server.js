@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
     
     //send a count change to kitchen chefs
     console.log("left kitchen:", code, "size:", `${size - 1}/8`)
-    io.to(code).emit("kitchen_count_change", `${size - 1}/8`)
+    io.sockets.in(code).emit("kitchen_count_change", `${size - 1}/8`)
   });
 
   //after kitchen leave
@@ -63,9 +63,9 @@ io.on('connection', (socket) => {
     console.log('join_kitchen_code:', code, 'size:', `${size}/8`)
 
     //send a count change to kitchen chefs
-    io.to(code).emit("kitchen_count_change", `${size}/8`)
+    io.sockets.in(code).emit("kitchen_count_change", `${size}/8`)
 
-    callback(`${size}/8`)
+    callback(`good`)
   })
 
   socket.on('create_kitchen_code', (callback) => {

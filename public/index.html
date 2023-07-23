@@ -71,6 +71,27 @@
             </div>
           </div>
         </div>
+
+        <div id="mm-wait-div" class="hidden text-xl grid fixed top-0 left-0 right-0 bottom-0 pointer-events-none">
+          <div class="pr-14 grid grid-rows-4 bg-slate-300 place-self-center pointer-events-auto">
+            <div>
+              <button class="btn-mm-code pointer-events-none"></button>
+              <p class="text-2xl text-center pt-3">Waiting for host...</p>
+            </div>
+            <div class="pl-14">
+              <button id="mm-wait-dc-1" class="btn-mm-code rounded-full pointer-events-none bg-slate-500"></button>
+              <button id="mm-wait-dc-2" class="btn-mm-code rounded-full pointer-events-none bg-slate-500"></button>
+              <button id="mm-wait-dc-3" class="btn-mm-code rounded-full pointer-events-none bg-slate-500"></button>
+              <button id="mm-wait-dc-4" class="btn-mm-code rounded-full pointer-events-none bg-slate-500"></button>
+              <button id="mm-wait-dc-5" class="btn-mm-code rounded-full pointer-events-none bg-slate-500"></button>
+            </div>
+            <div class="pl-14">
+              <button class="float-left px-4 h-12 m-1 bg-slate-600">leave</button>
+              <p id="mm-wait-counter" class="pt-3 text-center">0/8</p>
+            </div>
+          </div>
+        </div>
+
         
         <div id="mm-create-div" class="hidden text-xl grid fixed top-0 left-0 right-0 bottom-0 pointer-events-none">
           <div class="pr-14 grid grid-rows-4 bg-slate-300 place-self-center pointer-events-auto">

@@ -13,6 +13,18 @@ const mmCreateDisplayCode = [
 
 
 
+const mmWaitDiv = document.getElementById('mm-wait-div')
+const mmWaitCounterText = document.getElementById('mm-wait-counter')
+
+const mmWaitDisplayCode = [
+    document.getElementById('mm-wait-dc-1'),
+    document.getElementById('mm-wait-dc-2'),
+    document.getElementById('mm-wait-dc-3'),
+    document.getElementById('mm-wait-dc-4'),
+    document.getElementById('mm-wait-dc-5')
+];
+
+
 const mmJoinBtn = document.getElementById('mm-join-btn')
 const mmJoinKitchenDiv = document.getElementById('mm-join-div')
 const mmCloseJoinKitchenBtn = document.getElementById('mm-join-close-btn')
@@ -57,6 +69,7 @@ function handleCodeClick(event) {
     if (index < mmJoinDisplayCode.length) {
         //set the empty display to the set number
         mmJoinDisplayCode[index].innerHTML = number
+        mmWaitDisplayCode[index].innerHTML = number
 
         currentCode += number
     }
@@ -94,8 +107,13 @@ mmSubmitCodeBtn.addEventListener("click", function() {
             // error!
             mmCodeErrText.innerHTML = callback
         } else {
-            // continue on
-            mmCodeErrText.innerHTML = callback
+            //good 
+            //todo
+
+            mmWaitDiv.classList.remove('hidden')
+            mmJoinKitchenDiv.classList.add('hidden')
+            mmJoinBtn.disabled = true
+            joinKitchenUIOpen = false
         }
     });
 });
@@ -149,4 +167,5 @@ function leaveCreatedKitchen() {
 //kitchen joined count change
 socket.on("kitchen_count_change", (count) => {
     mmCreateCountText.innerHTML = count
+    mmWaitCounterText.innerHTML = count
 });
