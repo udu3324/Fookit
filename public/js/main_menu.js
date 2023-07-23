@@ -125,6 +125,8 @@ mmCreateBtn.addEventListener("click", function() {
                 for (let i = 0; i < 5; i++) {
                     mmCreateDisplayCode[i].innerHTML = serverCreatedCode.charAt(i)
                 }
+            } else {
+                //todo
             }
         });
     }
@@ -145,7 +147,6 @@ function leaveCreatedKitchen() {
 }
 
 //kitchen joined count change
-socket.on("join_kitchen_count_change", (count) => {
-    console.log(count + "/8")
-    mmCreateCountText.innerHTML = count + "/8"
+socket.on("kitchen_count_change", (count) => {
+    mmCreateCountText.innerHTML = count
 });
