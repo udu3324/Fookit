@@ -186,6 +186,20 @@ mmCreateStartBtn.addEventListener("click", function() {
     });
 });
 
+//kitchen has started!
+socket.on("kitchen_started_code", () => {
+    //hide everything
+    showCreateKitchen(false)
+    showJoinKitchen(false)
+
+    mm.classList.add('hidden');
+    kitchen.classList.remove('hidden');
+
+    console.log("kitchen started")
+    //show the kitchen!
+    //todo
+});
+
 //cancel kitchen creation
 mmCreateCancelBtn.addEventListener("click", function() {
     showCreateKitchen(false)
@@ -200,17 +214,4 @@ mmCreateCancelBtn.addEventListener("click", function() {
 socket.on("kitchen_count_change", (count) => {
     mmCreateCountText.innerHTML = count
     mmWaitCounterText.innerHTML = count
-});
-
-//kitchen has started!
-socket.on("kitchen_started_code", () => {
-    //hide everything
-    showCreateKitchen(false)
-    showJoinKitchen(false)
-
-    mm.classList.add('hidden');
-    kitchen.classList.remove('hidden');
-
-    console.log("kitchen started")
-    //show the kitchen!
 });

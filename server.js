@@ -44,9 +44,18 @@ io.on('connection', (socket) => {
 
       console.log("kitchen aborted:", code)
     } else {
-      //send a count change to kitchen chefs waiting
-      console.log("left kitchen:", code, "size:", `${size - 1}/8`)
-      io.sockets.in(code).emit("kitchen_count_change", `${size - 1}/8`)
+      //remove kitchen if main chef left
+      if (socket.id == listOfChefs(code)[0]) {
+        //make people waiting stop wait yeah
+        io.sockets.in(code).emit("kitchen_wait_stop")
+
+        //leave everyone in the kitchen
+        io.in(code).socketsLeave(code)
+      } else {
+        //send a count change to kitchen chefs waiting
+        console.log("left kitchen:", code, "size:", `${size - 1}/8`)
+        io.sockets.in(code).emit("kitchen_count_change", `${size - 1}/8`)
+      }
     }
   });
 
@@ -172,6 +181,20 @@ function listOfKitchens() {
   //only add kitchens with lengths under 6
   kitchens.forEach(function(kit) {
     if (kit[0].toString().length == 5) list.push(kit[0])
+  });
+  
+  return list
+}
+
+//with a kitchen, get list of chefs
+function listOfChefs(kitchen) {
+  const kitchens = Array.from(io.sockets.adapter.rooms);
+  let list = undefined
+
+  kitchens.forEach(function(kit) {
+    if (kit[0].toString() == kitchen) {
+      list = Array.from(kit[1])
+    }
   });
   
   return list
