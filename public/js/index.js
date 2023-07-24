@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io({ reconnection: false });
 
 const disconnectedDiv = document.getElementById('disconnected')
 const refreshBtn = document.getElementById('disconnected-refresh-btn')
@@ -14,12 +14,12 @@ function debounce(func, delay) {
 
 //self destruct website on disconnect lol
 socket.on('disconnect', function () {
-  console.log("disconnected from server!!!")
+  console.log("disconnected from server!!!");
 
-  disconnectedDiv.classList.remove('hidden')
-  document.getElementById('game-container').remove()
-})
+  disconnectedDiv.classList.remove('hidden');
+  document.getElementById('game-container').remove();
+});
 
 refreshBtn.addEventListener("click", function() {
-  location.reload()
+  location.reload();
 });

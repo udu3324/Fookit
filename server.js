@@ -9,6 +9,8 @@ const io = socketIO(server)
 
 const port = 3000
 
+const startedKitchens = []
+
 // Serve the Socket.IO client library
 app.use('/socket.io', express.static(path.join(__dirname, 'node_modules/socket.io/client-dist')))
 
@@ -30,9 +32,22 @@ io.on('connection', (socket) => {
     const size = io.sockets.adapter.rooms.get(code).size
     if (size == 1) return
     
-    //send a count change to kitchen chefs
-    console.log("left kitchen:", code, "size:", `${size - 1}/8`)
-    io.sockets.in(code).emit("kitchen_count_change", `${size - 1}/8`)
+    if (startedKitchens.includes(code)) {
+      //abort kitchen since user left while cooking started
+      startedKitchens.splice(startedKitchens.indexOf(code), 1);
+      
+      //make all chefs leave the kitchen
+      io.sockets.in(code).emit("kitchen_return_menu")
+
+      //leave everyone in the kitchen
+      io.in(code).socketsLeave(code)
+
+      console.log("kitchen aborted:", code)
+    } else {
+      //send a count change to kitchen chefs waiting
+      console.log("left kitchen:", code, "size:", `${size - 1}/8`)
+      io.sockets.in(code).emit("kitchen_count_change", `${size - 1}/8`)
+    }
   });
 
   //after kitchen leave
@@ -52,8 +67,10 @@ io.on('connection', (socket) => {
   socket.on('join_kitchen_code', (code, callback) => {
     //if length wrong
     if (code.length !== 5) return callback("wrong_length")
+
     //if kitchen doesn't exists
     if (!listOfKitchens().includes(code)) return callback("wrong_code")
+    
     //if kitchen is full
     if (io.sockets.adapter.rooms.get(code).size == 8) return callback("full_kitchen")
     
@@ -84,7 +101,6 @@ io.on('connection', (socket) => {
     io.sockets.in(kitchen).emit("kitchen_count_change", `${size}/8`)
 
     console.log('leave_kitchen_code', kitchen, 'size:', `${size}/8`)
-    console.log("updated kitchens:", listOfKitchens())
     callback("good")
   })
 
@@ -120,6 +136,23 @@ io.on('connection', (socket) => {
     
     console.log('delete_kitchen_code:', kitchen)
     console.log("updated kitchens:", listOfKitchens())
+  })
+
+  socket.on('start_kitchen_code', (callback) => {
+    let kitchen = getCurrentKitchen(socket)
+    
+    //if they aren't in a kitchen
+    if (kitchen == undefined) return callback("not_in_one")
+
+    //if the kitchen is too small
+    if (io.sockets.adapter.rooms.get(kitchen).size == 1) return callback("too_small")
+    
+    //send the start
+    io.sockets.in(kitchen).emit("kitchen_started_code")
+
+    startedKitchens.push(kitchen)
+    
+    console.log('start_kitchen_code:', kitchen)
   })
 })
 

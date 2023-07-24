@@ -1,5 +1,7 @@
+const mm = document.getElementById('mm');
 const mmCreateBtn = document.getElementById('mm-create-btn');
 const mmCreateKitchenDiv = document.getElementById('mm-create-div');
+const mmCreateStartBtn = document.getElementById('mm-create-start-btn');
 const mmCreateCancelBtn = document.getElementById('mm-create-cancel-btn');
 const mmCreateCountText = document.getElementById('mm-chef-count');
 
@@ -59,7 +61,7 @@ function showJoinKitchen(bool) {
             mmJoinDisplayCode[i].innerHTML = "";
         }
     }
-}
+};
 mmJoinBtn.addEventListener("click", function() {
     showJoinKitchen(true);
 });
@@ -113,14 +115,12 @@ mmSubmitCodeBtn.addEventListener("click", function() {
         console.log('join_kitchen_code:', callback);
         if (callback !== "good") {
             // error!
-            mmCodeErrText.innerHTML = callback
+            mmCodeErrText.innerHTML = callback;
         } else {
-            //good 
-            //todo
-            
-            //hide join kitchen div, show waiting div
-            mmWaitDiv.classList.remove('hidden')
-            showJoinKitchen(false)
+            // good 
+            // hide join kitchen div, show waiting div
+            mmWaitDiv.classList.remove('hidden');
+            showJoinKitchen(false);
         }
     });
 });
@@ -129,10 +129,10 @@ mmSubmitCodeBtn.addEventListener("click", function() {
 mmWaitLeaveBtn.addEventListener("click", function() {
     //reset wait div
     for (let i = 0; i < 5; i++) {
-        mmWaitDisplayCode[i].innerHTML = ""
+        mmWaitDisplayCode[i].innerHTML = "";
     }
 
-    mmWaitDiv.classList.add('hidden')
+    mmWaitDiv.classList.add('hidden');
 
     socket.emit("leave_kitchen_code", callback => {
         console.log('leave_kitchen_code:', callback);
@@ -178,6 +178,14 @@ mmCreateBtn.addEventListener("click", function() {
     });
 });
 
+//start the kitchen cooking!
+mmCreateStartBtn.addEventListener("click", function() {
+    socket.emit("start_kitchen_code", callback => {
+        console.log('start_kitchen_code:', callback);
+        //todo fallback
+    });
+});
+
 //cancel kitchen creation
 mmCreateCancelBtn.addEventListener("click", function() {
     showCreateKitchen(false)
@@ -192,4 +200,17 @@ mmCreateCancelBtn.addEventListener("click", function() {
 socket.on("kitchen_count_change", (count) => {
     mmCreateCountText.innerHTML = count
     mmWaitCounterText.innerHTML = count
+});
+
+//kitchen has started!
+socket.on("kitchen_started_code", () => {
+    //hide everything
+    showCreateKitchen(false)
+    showJoinKitchen(false)
+
+    mm.classList.add('hidden');
+    kitchen.classList.remove('hidden');
+
+    console.log("kitchen started")
+    //show the kitchen!
 });
