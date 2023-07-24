@@ -22,7 +22,8 @@ io.on('connection', (socket) => {
   socket.on('disconnecting', function(){
     console.log('Socket disconnecting')
     
-    const code = getCurrentKitchen(socket.id)
+    const code = getCurrentKitchen(socket)
+
     //return if they weren't in a kitchen
     if (code == undefined) return
     //return if the kitchen has only them (it'll be deleted anyways)
@@ -68,6 +69,25 @@ io.on('connection', (socket) => {
     callback(`good`)
   })
 
+  socket.on('leave_kitchen_code', (callback) => {
+    let kitchen = getCurrentKitchen(socket)
+    
+    //if they aren't in a kitchen
+    if (kitchen == undefined) return callback("not_in_one")
+    
+    //leave kitchen
+    socket.leave(kitchen)
+
+    let size = io.sockets.adapter.rooms.get(kitchen).size
+
+    //send a count change to kitchen chefs
+    io.sockets.in(kitchen).emit("kitchen_count_change", `${size}/8`)
+
+    console.log('leave_kitchen_code', kitchen, 'size:', `${size}/8`)
+    console.log("updated kitchens:", listOfKitchens())
+    callback("good")
+  })
+
   socket.on('create_kitchen_code', (callback) => {
     let code = createCode()
 
@@ -85,15 +105,20 @@ io.on('connection', (socket) => {
   })
 
   socket.on('delete_kitchen_code', (callback) => {
-    let kitchen = Array.from(socket.rooms)[1]
+    let kitchen = getCurrentKitchen(socket)
     
     //if they aren't in a kitchen
     if (kitchen == undefined) return callback("not_in_one")
     
+    //make people waiting stop wait yeah
+    io.sockets.in(kitchen).emit("kitchen_wait_stop")
+
     //leave everyone in the kitchen
     io.in(kitchen).socketsLeave(kitchen)
+
+    callback("good")
     
-    console.log('delete_kitchen_code', kitchen)
+    console.log('delete_kitchen_code:', kitchen)
     console.log("updated kitchens:", listOfKitchens())
   })
 })
@@ -119,18 +144,7 @@ function listOfKitchens() {
   return list
 }
 
-//from a chef id, get the kitchen if possible
-function getCurrentKitchen(id) {
-  const kitchens = Array.from(io.sockets.adapter.rooms);
-  let kitcode = undefined
-
-  kitchens.forEach(function(kit) {
-    if (kit[0].toString().length == 5) {
-      const kitwo = Array.from(kit[1])
-
-      if (kitwo.includes(id)) kitcode = kit[0]
-    }
-  });
-
-  return kitcode
+//from a socket, get the kitchen if possible
+function getCurrentKitchen(socket) {
+  return Array.from(socket.rooms)[1]
 }

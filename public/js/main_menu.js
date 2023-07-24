@@ -1,7 +1,7 @@
-const mmCreateBtn = document.getElementById('mm-create-btn')
-const mmCreateKitchenDiv = document.getElementById('mm-create-div')
-const mmCreateCancelBtn = document.getElementById('mm-create-cancel-btn')
-const mmCreateCountText = document.getElementById('mm-chef-count')
+const mmCreateBtn = document.getElementById('mm-create-btn');
+const mmCreateKitchenDiv = document.getElementById('mm-create-div');
+const mmCreateCancelBtn = document.getElementById('mm-create-cancel-btn');
+const mmCreateCountText = document.getElementById('mm-chef-count');
 
 const mmCreateDisplayCode = [
     document.getElementById('mm-create-dc-1'),
@@ -13,8 +13,9 @@ const mmCreateDisplayCode = [
 
 
 
-const mmWaitDiv = document.getElementById('mm-wait-div')
-const mmWaitCounterText = document.getElementById('mm-wait-counter')
+const mmWaitDiv = document.getElementById('mm-wait-div');
+const mmWaitCounterText = document.getElementById('mm-wait-counter');
+const mmWaitLeaveBtn = document.getElementById('mm-wait-leave-btn');
 
 const mmWaitDisplayCode = [
     document.getElementById('mm-wait-dc-1'),
@@ -25,12 +26,13 @@ const mmWaitDisplayCode = [
 ];
 
 
-const mmJoinBtn = document.getElementById('mm-join-btn')
-const mmJoinKitchenDiv = document.getElementById('mm-join-div')
-const mmCloseJoinKitchenBtn = document.getElementById('mm-join-close-btn')
-const mmCodeErrText = document.getElementById('mm-c-error')
-const mmSubmitCodeBtn = document.getElementById('mm-c-submit')
-const mmRemoveCodeBtn = document.getElementById('mm-c-remove')
+
+const mmJoinBtn = document.getElementById('mm-join-btn');
+const mmJoinKitchenDiv = document.getElementById('mm-join-div');
+const mmCloseJoinKitchenBtn = document.getElementById('mm-join-close-btn');
+const mmCodeErrText = document.getElementById('mm-c-error');
+const mmSubmitCodeBtn = document.getElementById('mm-c-submit');
+const mmRemoveCodeBtn = document.getElementById('mm-c-remove');
 
 const mmJoinDisplayCode = [
     document.getElementById('mm-dc-1'),
@@ -40,26 +42,32 @@ const mmJoinDisplayCode = [
     document.getElementById('mm-dc-5')
 ];
 
-//join kitchen stuff
-let joinKitchenUIOpen = false;
-mmJoinBtn.addEventListener("click", function() {
-    if (joinKitchenUIOpen) {
-        joinKitchenUIOpen = false
-        mmJoinKitchenDiv.classList.add('hidden')
-    } else {
-        joinKitchenUIOpen = true
-        mmJoinKitchenDiv.classList.remove('hidden')
-    }
-});
+//join kitchen stuff join kitchen stuff join kitchen stuff join kitchen stuff join kitchen stuff join kitchen stuff 
+let currentCode = "";
 
+function showJoinKitchen(bool) {
+    const hiddenClassAction = bool ? 'remove' : 'add';
+    mmJoinKitchenDiv.classList[hiddenClassAction]('hidden');
+    mmCreateBtn.disabled = bool;
+    mmJoinBtn.disabled = bool;
+    if (!bool) {
+        mmCodeErrText.innerHTML = "";
+
+        //reset the display code
+        currentCode = "";
+        for (let i = 0; i < 5; i++) {
+            mmJoinDisplayCode[i].innerHTML = "";
+        }
+    }
+}
+mmJoinBtn.addEventListener("click", function() {
+    showJoinKitchen(true);
+});
 mmCloseJoinKitchenBtn.addEventListener("click", function() {
-    joinKitchenUIOpen = false
-    mmJoinKitchenDiv.classList.add('hidden')
+    showJoinKitchen(false);
 });
 
 //entering code buttons
-let currentCode = ""
-
 function handleCodeClick(event) {
     const buttonId = event.target.id
     const number = buttonId.substring(5)
@@ -89,7 +97,7 @@ mmRemoveCodeBtn.addEventListener("click", function() {
     }
 });
 
-// send a request
+// send a request to join kitchen
 mmSubmitCodeBtn.addEventListener("click", function() {
     if (currentCode.length < 5) {
         mmCodeErrText.innerHTML = "Too short!"
@@ -109,60 +117,76 @@ mmSubmitCodeBtn.addEventListener("click", function() {
         } else {
             //good 
             //todo
-
+            
+            //hide join kitchen div, show waiting div
             mmWaitDiv.classList.remove('hidden')
-            mmJoinKitchenDiv.classList.add('hidden')
-            mmJoinBtn.disabled = true
-            joinKitchenUIOpen = false
+            showJoinKitchen(false)
         }
     });
 });
 
-//create kitchen stuff
-let createKitchenOpen = false
-let serverCreatedCode = ""
-
-mmCreateBtn.addEventListener("click", function() {
-    if (createKitchenOpen) {
-        //close
-        createKitchenOpen = false
-        mmCreateKitchenDiv.classList.add('hidden')
-
-        leaveCreatedKitchen()
-    } else {
-        //open
-        socket.emit("create_kitchen_code", callback => {
-            console.log('create_kitchen_code:', callback);
-            if (callback.includes("good")) {
-                //show the div
-                createKitchenOpen = true
-                mmCreateKitchenDiv.classList.remove('hidden')
-
-                //create the display
-                serverCreatedCode = callback.substring(4)
-                for (let i = 0; i < 5; i++) {
-                    mmCreateDisplayCode[i].innerHTML = serverCreatedCode.charAt(i)
-                }
-            } else {
-                //todo
-            }
-        });
+//wait kitchen stuff wait kitchen stuff wait kitchen stuff wait kitchen stuff wait kitchen stuff wait kitchen stuff 
+mmWaitLeaveBtn.addEventListener("click", function() {
+    //reset wait div
+    for (let i = 0; i < 5; i++) {
+        mmWaitDisplayCode[i].innerHTML = ""
     }
+
+    mmWaitDiv.classList.add('hidden')
+
+    socket.emit("leave_kitchen_code", callback => {
+        console.log('leave_kitchen_code:', callback);
+    });
+})
+
+//kitchen ended while waiting bruh
+socket.on("kitchen_wait_stop", () => {
+    //reset wait div
+    for (let i = 0; i < 5; i++) {
+        mmWaitDisplayCode[i].innerHTML = ""
+    }
+
+    mmWaitDiv.classList.add('hidden')
+
+    //todo notice of kitchen ending
+});
+
+//create kitchen stuff create kitchen stuff create kitchen stuff create kitchen stuff create kitchen stuff
+let serverCreatedCode = ""
+function showCreateKitchen(bool) {
+    const hiddenClassAction = bool ? 'remove' : 'add';
+    mmCreateKitchenDiv.classList[hiddenClassAction]('hidden');
+    mmCreateBtn.disabled = bool;
+    mmJoinBtn.disabled = bool;
+}
+
+//main button that opens div and requests server
+mmCreateBtn.addEventListener("click", function() {
+    socket.emit("create_kitchen_code", callback => {
+        console.log('create_kitchen_code:', callback);
+        if (callback.includes("good")) {
+            showCreateKitchen(true)
+
+            //create the display
+            serverCreatedCode = callback.substring(4)
+            for (let i = 0; i < 5; i++) {
+                mmCreateDisplayCode[i].innerHTML = serverCreatedCode.charAt(i)
+            }
+        } else {
+            //todo fallback
+        }
+    });
 });
 
 //cancel kitchen creation
 mmCreateCancelBtn.addEventListener("click", function() {
-    createKitchenOpen = false
-    mmCreateKitchenDiv.classList.add('hidden')
+    showCreateKitchen(false)
 
-    leaveCreatedKitchen()
-});
-
-function leaveCreatedKitchen() {
     socket.emit("delete_kitchen_code", callback => {
         console.log('delete_kitchen_code:', callback);
+        //todo fallback
     });
-}
+});
 
 //kitchen joined count change
 socket.on("kitchen_count_change", (count) => {
