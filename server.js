@@ -7,6 +7,8 @@ const app = express()
 const server = http.createServer(app)
 const io = socketIO(server)
 
+const dish = require('./dish');
+
 const port = 3000
 
 const startedKitchens = []
@@ -28,13 +30,14 @@ io.on('connection', (socket) => {
 
     //return if they weren't in a kitchen
     if (code == undefined) return
+
     //return if the kitchen has only them (it'll be deleted anyways)
     const size = io.sockets.adapter.rooms.get(code).size
     if (size == 1) return
     
-    if (startedKitchens.includes(code)) {
+    if (listOfStartedKitchens().includes(code)) {
       //abort kitchen since user left while cooking started
-      startedKitchens.splice(startedKitchens.indexOf(code), 1);
+      removeStartedKitchen(code)
       
       //make all chefs leave the kitchen
       io.sockets.in(code).emit("kitchen_return_menu")
@@ -79,6 +82,9 @@ io.on('connection', (socket) => {
 
     //if kitchen doesn't exists
     if (!listOfKitchens().includes(code)) return callback("wrong_code")
+    
+    //if kitchen already started
+    if (listOfStartedKitchens().includes(code)) return callback("kitchen_started")
     
     //if kitchen is full
     if (io.sockets.adapter.rooms.get(code).size == 8) return callback("full_kitchen")
@@ -158,10 +164,22 @@ io.on('connection', (socket) => {
     
     //send the start
     io.sockets.in(kitchen).emit("kitchen_started_code")
-
-    startedKitchens.push(kitchen)
     
-    console.log('start_kitchen_code:', kitchen)
+    let kitArray = [kitchen];
+    
+    listOfChefs(kitchen).forEach(function(chef) {
+      kitArray.push([
+        chef, //socket id
+        dish.pbnj, //objective
+        [] //what ingredients they currently have
+      ]);
+    });
+
+    startedKitchens.push(kitArray);
+
+    console.log("t", startedKitchens);
+    
+    console.log('start_kitchen_code:', kitchen);
   })
 })
 
@@ -183,7 +201,27 @@ function listOfKitchens() {
     if (kit[0].toString().length == 5) list.push(kit[0])
   });
   
-  return list
+  return list;
+}
+
+//get a list of started kitchens
+function listOfStartedKitchens() {
+  const list = []
+
+  startedKitchens.forEach(function(kit) {
+    list.push(kit[0])
+  });
+
+  return list;
+}
+
+//remove a started kitchen
+function removeStartedKitchen(code) {
+  for (let i = 0; i < (startedKitchens.length - 1); i++) {
+    if (startedKitchens[i][0] == code) {
+      startedKitchens.splice(startedKitchens.indexOf(i), 1);
+    }
+  }
 }
 
 //with a kitchen, get list of chefs
