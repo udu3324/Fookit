@@ -8,7 +8,11 @@ socket.on("kitchen_return_menu", () => {
     console.log("kitchen has stopped")
 });
 
-dragElement(document.getElementById('toast'))
+const ingredients = document.getElementsByClassName('sprite');
+    
+Array.from(ingredients).forEach(function(e) {
+    dragElement(e)
+})
 
 //simple drag div function - ty w3schools and gpt
 function dragElement(elmnt) {

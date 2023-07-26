@@ -31,5 +31,13 @@ body {
 }
 
 .toast {
-    background-position: 0 0;
+    background-position: 0px 0px;
+}
+
+.jelly_jar {
+    background-position: -128px 0px;
+}
+
+.peanut_butter_jar {
+    background-position: -256px 0px;
 }

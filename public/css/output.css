@@ -655,6 +655,11 @@ video {
   background-color: rgb(185 28 28 / var(--tw-bg-opacity));
 }
 
+.bg-slate-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(226 232 240 / var(--tw-bg-opacity));
+}
+
 .bg-slate-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(203 213 225 / var(--tw-bg-opacity));
@@ -668,16 +673,6 @@ video {
 .bg-slate-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(71 85 105 / var(--tw-bg-opacity));
-}
-
-.bg-slate-800 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(30 41 59 / var(--tw-bg-opacity));
-}
-
-.bg-slate-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(226 232 240 / var(--tw-bg-opacity));
 }
 
 .px-3 {
@@ -758,5 +753,13 @@ body {
 }
 
 .toast {
-  background-position: 0 0;
+  background-position: 0px 0px;
+}
+
+.jelly_jar {
+  background-position: -128px 0px;
+}
+
+.peanut_butter_jar {
+  background-position: -256px 0px;
 }
