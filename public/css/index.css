@@ -8,13 +8,28 @@
     padding: 0;
 }
 
+/* Hide scrollbars */
 body {
-    overflow: hidden; /* Hide scrollbars */
+    overflow: hidden;
 }
 
-
+/* tailwindcss custom classes */
 @layer components {
     .btn-mm-code {
         @apply float-left w-12 h-12 m-1;
     }
+}
+
+/* sprites */
+.sprite {
+    width: 129px;
+    height: 129px;
+
+    background-image: url('../img/sprite.png');
+
+    position: absolute;
+}
+
+.toast {
+    background-position: 0 0;
 }

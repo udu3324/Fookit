@@ -670,6 +670,16 @@ video {
   background-color: rgb(71 85 105 / var(--tw-bg-opacity));
 }
 
+.bg-slate-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 41 59 / var(--tw-bg-opacity));
+}
+
+.bg-slate-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(226 232 240 / var(--tw-bg-opacity));
+}
+
 .px-3 {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
@@ -730,7 +740,23 @@ video {
   padding: 0;
 }
 
+/* Hide scrollbars */
+
 body {
   overflow: hidden;
-  /* Hide scrollbars */
+}
+
+/* tailwindcss custom classes */
+
+/* sprites */
+
+.sprite {
+  width: 129px;
+  height: 129px;
+  background-image: url('../img/sprite.png');
+  position: absolute;
+}
+
+.toast {
+  background-position: 0 0;
 }

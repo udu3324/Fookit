@@ -176,8 +176,6 @@ io.on('connection', (socket) => {
     });
 
     startedKitchens.push(kitArray);
-
-    console.log("t", startedKitchens);
     
     console.log('start_kitchen_code:', kitchen);
   })
