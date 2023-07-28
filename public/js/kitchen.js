@@ -1,18 +1,27 @@
 const kitchen = document.getElementById('kitchen');
+const kitchenWorkspace = document.getElementById('kitchen-workspace');
+const kitchenPlate = document.getElementById('kitchen-plate');
 
 //kitchen has ended
 socket.on("kitchen_return_menu", () => {
     mm.classList.remove('hidden');
     kitchen.classList.add('hidden');
 
-    console.log("kitchen has stopped")
+    console.log("kitchen has stopped");
 });
 
-const ingredients = document.getElementsByClassName('sprite');
-    
-Array.from(ingredients).forEach(function(e) {
-    dragElement(e)
-})
+dragElement(kitchenPlate);
+
+socket.on("kitchen_add_ingredient", (ingredient, slide) => {
+    console.log(ingredient, slide)
+
+    var item = document.createElement('div');
+    item.classList.add('sprite');
+    item.classList.add(ingredient);
+
+    kitchenWorkspace.appendChild(item);
+    dragElement(item)
+});
 
 //simple drag div function - ty w3schools and gpt
 function dragElement(elmnt) {

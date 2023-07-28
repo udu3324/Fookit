@@ -6,7 +6,7 @@
   </head>
   <body>
     <div id="game-container" class="w-screen h-screen">
-      <div id="mm" class="hidden">
+      <div id="mm" class="">
         <div id="mm-layout" class="grid grid-cols-5 grid-flow-col place-content-center h-screen">
           <div>
             <h1 class="text-2xl font-bold">
@@ -114,13 +114,9 @@
         </div>
       </div>
       
-      <div id="kitchen">
+      <div id="kitchen" class="hidden">
         <div id="kitchen-workspace" class="w-screen h-screen bg-slate-200">
-          <div class="sprite plate"></div>
-          <div class="sprite toast"></div>
-          <div class="sprite jelly_jar"></div>
-          <div class="sprite peanut_butter_jar"></div>
-          <div class="sprite avacado_slices"></div>
+          <div id="kitchen-plate" class="sprite plate"></div>
         </div>
       </div>
     </div>

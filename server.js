@@ -171,11 +171,14 @@ io.on('connection', (socket) => {
       kitArray.push([
         chef, //socket id
         dish.pbnj, //objective
+        [], //their tools to use (starts off with none)
         [] //what ingredients they currently have
       ]);
     });
 
     startedKitchens.push(kitArray);
+
+    runKitchen(kitchen)
     
     console.log('start_kitchen_code:', kitchen);
   })
@@ -190,6 +193,7 @@ function createCode() {
 }
 
 //get list of kitchens in socket io
+// ["38902", "12839", "34891", etc]
 function listOfKitchens() {
   const kitchens = Array.from(io.sockets.adapter.rooms);
   const list = []
@@ -202,27 +206,8 @@ function listOfKitchens() {
   return list;
 }
 
-//get a list of started kitchens
-function listOfStartedKitchens() {
-  const list = []
-
-  startedKitchens.forEach(function(kit) {
-    list.push(kit[0])
-  });
-
-  return list;
-}
-
-//remove a started kitchen
-function removeStartedKitchen(code) {
-  for (let i = 0; i < (startedKitchens.length - 1); i++) {
-    if (startedKitchens[i][0] == code) {
-      startedKitchens.splice(startedKitchens.indexOf(i), 1);
-    }
-  }
-}
-
 //with a kitchen, get list of chefs
+// ["socket id here", "socket id here", etc]
 function listOfChefs(kitchen) {
   const kitchens = Array.from(io.sockets.adapter.rooms);
   let list = undefined
@@ -236,7 +221,62 @@ function listOfChefs(kitchen) {
   return list
 }
 
-//from a socket, get the kitchen if possible
+//from a socket, get the kitchen they're in 
+// "38492"
 function getCurrentKitchen(socket) {
   return Array.from(socket.rooms)[1]
+}
+
+//get a list of started kitchens 
+// ["38902", "12839", etc]
+function listOfStartedKitchens() {
+  const list = []
+
+  startedKitchens.forEach(function(kit) {
+    list.push(kit[0])
+  });
+
+  return list;
+}
+
+//remove a started kitchen
+//it dont return anything
+function removeStartedKitchen(code) {
+  startedKitchens.forEach(function(kit) {
+    if (kit[0] == code) {
+      startedKitchens.splice(startedKitchens.indexOf(kit), 1);
+    }
+  });
+}
+
+//there are individual functions for these because indexes update
+//when kitchens start and go
+
+//get a started kitchen's data
+//returns big stuff
+function startedKitchenData(kitchen) {
+  let list = []
+
+  startedKitchens.forEach(function(kit) {
+    if (kit[0] == kitchen) list = kit
+  });
+  
+  return list
+}
+
+async function runKitchen(code) {
+
+  console.log("t", startedKitchenData(code))
+  console.log("ok starting timer")
+
+  let socketID = startedKitchenData(code)[1][0]
+  let objectiveItems = startedKitchenData(code)[1][1]
+
+  let on = 0
+  setInterval(function() {
+    io.to(socketID).emit("kitchen_add_ingredient", objectiveItems[on], "top")
+
+    if (on == 3) on = 0;
+    on++;
+  }, 1000);
 }

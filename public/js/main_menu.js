@@ -191,6 +191,7 @@ socket.on("kitchen_started_code", () => {
     //hide everything
     showCreateKitchen(false)
     showJoinKitchen(false)
+    mmWaitDiv.classList.add('hidden');
 
     mm.classList.add('hidden');
     kitchen.classList.remove('hidden');
