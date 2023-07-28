@@ -746,20 +746,28 @@ body {
 /* sprites */
 
 .sprite {
-  width: 129px;
-  height: 129px;
+  width: 128px;
+  height: 128px;
   background-image: url('../img/sprite.png');
   position: absolute;
 }
 
-.toast {
+.plate {
   background-position: 0px 0px;
 }
 
+.toast {
+  background-position: 0px -128px;
+}
+
 .jelly_jar {
-  background-position: -128px 0px;
+  background-position: -128px -128px;
 }
 
 .peanut_butter_jar {
-  background-position: -256px 0px;
+  background-position: -256px -128px;
+}
+
+.avacado_slices {
+  background-position: -384px -128px;
 }
