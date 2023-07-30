@@ -1,6 +1,38 @@
 const kitchen = document.getElementById('kitchen');
 const kitchenWorkspace = document.getElementById('kitchen-workspace');
+
 const kitchenPlate = document.getElementById('kitchen-plate');
+
+dragElement(kitchenPlate);
+//set plate middle (temp)
+kitchenPlate.style.left = (window.innerWidth / 2 - 64) + "px";
+kitchenPlate.style.top = (window.innerHeight / 2 - 64) + "px";
+
+//adds the objective from the server
+let dishObjective = [];
+let currentStack = [];
+socket.on("kitchen_add_objective", (objective) => {
+    console.log(objective)
+
+    dishObjective = objective;
+});
+
+//gets new ingredients and display/animate on screen
+let itemID = 1;
+socket.on("kitchen_add_ingredient", (ingredient, slide) => {
+    console.log(ingredient, slide)
+
+    var item = document.createElement('div');
+
+    item.id = itemID;
+    item.classList.add('sprite');
+    item.classList.add(ingredient);
+
+    kitchenWorkspace.appendChild(item);
+    dragElement(item);
+
+    itemID++;
+});
 
 //kitchen has ended
 socket.on("kitchen_return_menu", () => {
@@ -10,18 +42,21 @@ socket.on("kitchen_return_menu", () => {
     console.log("kitchen has stopped");
 });
 
-dragElement(kitchenPlate);
-
-socket.on("kitchen_add_ingredient", (ingredient, slide) => {
-    console.log(ingredient, slide)
-
+//stack ingredient onto dish
+function stackIngredient(element) {
     var item = document.createElement('div');
     item.classList.add('sprite');
-    item.classList.add(ingredient);
+    item.classList.add(element.classList[1]);
 
-    kitchenWorkspace.appendChild(item);
-    dragElement(item)
-});
+    kitchenPlate.appendChild(item);
+
+    element.remove();
+    
+    //move this to a diff function
+    //let current = currentStack.length;
+
+    //if (dishObjective[current] == element.classList[1])
+}
 
 //simple drag div function - ty w3schools and gpt
 function dragElement(elmnt) {
@@ -75,14 +110,14 @@ function dragElement(elmnt) {
         if (pxToInt(elmnt.style.top) < 0) {
             elmnt.style.top = "0px";
         }
-        if (pxToInt(elmnt.style.top) > window.innerHeight - 129) {
-            elmnt.style.top = (window.innerHeight - 129) + "px";
+        if (pxToInt(elmnt.style.top) > window.innerHeight - 128) {
+            elmnt.style.top = (window.innerHeight - 128) + "px";
         }
         if (pxToInt(elmnt.style.left) < 0) {
             elmnt.style.left = "0px";
         }
-        if (pxToInt(elmnt.style.left) > window.innerWidth - 129) {
-            elmnt.style.left = (window.innerWidth - 129) + "px";
+        if (pxToInt(elmnt.style.left) > window.innerWidth - 128) {
+            elmnt.style.left = (window.innerWidth - 128) + "px";
         }
     }
 

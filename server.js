@@ -165,7 +165,10 @@ io.on('connection', (socket) => {
     //send the start
     io.sockets.in(kitchen).emit("kitchen_started_code")
     
-    let kitArray = [kitchen];
+    let kitArray = [
+      kitchen,
+      ["data"]
+    ];
     
     listOfChefs(kitchen).forEach(function(chef) {
       kitArray.push([
@@ -189,7 +192,7 @@ server.listen(port, () => {
 })
 
 function createCode() {
-  return Math.floor(Math.random() * 100000).toString().padStart(5, '0')
+  return Math.floor(Math.random() * 100000).toString().padStart(5, '0');
 }
 
 //get list of kitchens in socket io
@@ -227,7 +230,7 @@ function getCurrentKitchen(socket) {
   return Array.from(socket.rooms)[1]
 }
 
-//get a list of started kitchens 
+//get a list of started kitchen ids
 // ["38902", "12839", etc]
 function listOfStartedKitchens() {
   const list = []
@@ -254,29 +257,43 @@ function removeStartedKitchen(code) {
 
 //get a started kitchen's data
 //returns big stuff
-function startedKitchenData(kitchen) {
+function startedKitchenData(kitchen, includeTopData) {
   let list = []
 
   startedKitchens.forEach(function(kit) {
+    //if started kitchen has same code as provided
     if (kit[0] == kitchen) list = kit
   });
+
+  if (!includeTopData) {
+    list.shift();
+    list.shift();
+  }
   
-  return list
+  return list;
 }
 
 async function runKitchen(code) {
-
-  console.log("t", startedKitchenData(code))
   console.log("ok starting timer")
 
-  let socketID = startedKitchenData(code)[1][0]
-  let objectiveItems = startedKitchenData(code)[1][1]
+  let kitchenStarted = startedKitchenData(code, false);
+
+  console.log(kitchenStarted)
+  console.log("size is", kitchenStarted.length)
+
+  //give everyone their objective
+  kitchenStarted.forEach(function(kit) {
+    io.to(kit[0]).emit("kitchen_add_objective", kit[1]);
+    console.log("found", kit[1])
+  });
+
+  let objectiveItems = kitchenStarted[0][1];
 
   let on = 0
-  setInterval(function() {
-    io.to(socketID).emit("kitchen_add_ingredient", objectiveItems[on], "top")
+  let thing = setInterval(function() {
+    io.sockets.in(code).emit("kitchen_add_ingredient", objectiveItems[on], "top")
 
-    if (on == 3) on = 0;
+    if (on == 3) clearInterval(thing);
     on++;
   }, 1000);
 }
