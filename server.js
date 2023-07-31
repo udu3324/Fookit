@@ -54,6 +54,7 @@ io.on('connection', (socket) => {
 
         //leave everyone in the kitchen
         io.in(code).socketsLeave(code)
+        console.log("kitchen wait stop:", code)
       } else {
         //send a count change to kitchen chefs waiting
         console.log("left kitchen:", code, "size:", `${size - 1}/8`)
@@ -257,18 +258,13 @@ function removeStartedKitchen(code) {
 
 //get a started kitchen's data
 //returns big stuff
-function startedKitchenData(kitchen, includeTopData) {
+function startedKitchenData(kitchen) {
   let list = []
 
   startedKitchens.forEach(function(kit) {
     //if started kitchen has same code as provided
-    if (kit[0] == kitchen) list = kit
+    if (kit[0] == kitchen) list = kit.slice();
   });
-
-  if (!includeTopData) {
-    list.shift();
-    list.shift();
-  }
   
   return list;
 }
@@ -276,24 +272,31 @@ function startedKitchenData(kitchen, includeTopData) {
 async function runKitchen(code) {
   console.log("ok starting timer")
 
-  let kitchenStarted = startedKitchenData(code, false);
+  let kitchenStarted = startedKitchenData(code);
 
   console.log(kitchenStarted)
   console.log("size is", kitchenStarted.length)
 
-  //give everyone their objective
-  kitchenStarted.forEach(function(kit) {
+  //for each user in kitchen
+  //give everyone their objective (skip first 2 indexes)
+  kitchenStarted.forEach((kit, index) => {
+    if (index < 2) return;
+    
     io.to(kit[0]).emit("kitchen_add_objective", kit[1]);
-    console.log("found", kit[1])
+
+    //give them their item periodically
+    let objectiveItems = kit[1];
+
+    let on = 0
+    let thing = setInterval(function() {
+      console.log("giving a " + objectiveItems[on] + " to " + kit[0])
+      io.to(kit[0]).emit("kitchen_add_ingredient", objectiveItems[on], "top")
+
+      if (on == 3) clearInterval(thing);
+      on++;
+    }, 1000);
   });
 
-  let objectiveItems = kitchenStarted[0][1];
+  //next
 
-  let on = 0
-  let thing = setInterval(function() {
-    io.sockets.in(code).emit("kitchen_add_ingredient", objectiveItems[on], "top")
-
-    if (on == 3) clearInterval(thing);
-    on++;
-  }, 1000);
 }

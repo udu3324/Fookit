@@ -51,11 +51,6 @@ function stackIngredient(element) {
     kitchenPlate.appendChild(item);
 
     element.remove();
-    
-    //move this to a diff function
-    //let current = currentStack.length;
-
-    //if (dishObjective[current] == element.classList[1])
 }
 
 //simple drag div function - ty w3schools and gpt
@@ -119,6 +114,17 @@ function dragElement(elmnt) {
         if (pxToInt(elmnt.style.left) > window.innerWidth - 128) {
             elmnt.style.left = (window.innerWidth - 128) + "px";
         }
+
+        //check for collision
+        if (isColliding(kitchenPlate, elmnt) && elmnt !== kitchenPlate) {
+            //check if the ingredient is in the next objective item
+            let current = currentStack.length;
+
+            if (dishObjective[current] == elmnt.classList[1]) {
+                stackIngredient(elmnt);
+                currentStack.push(elmnt.classList[1]);
+            }
+        }
     }
 
     function closeDragElement() {
@@ -128,6 +134,18 @@ function dragElement(elmnt) {
         document.removeEventListener("touchmove", elementDrag);
     }
 }
+
+// detect collision (ty https://stackoverflow.com/a/59435080)
+function isColliding(a, b) {
+    const rect1 = a.getBoundingClientRect();
+    const rect2 = b.getBoundingClientRect();
+    const isInHoriztonalBounds =
+      rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x;
+    const isInVerticalBounds =
+      rect1.y < rect2.y + rect2.height && rect1.y + rect1.height > rect2.y;
+    const isOverlapping = isInHoriztonalBounds && isInVerticalBounds;
+    return isOverlapping;
+  }
 
 // 32px -> 32
 function pxToInt(string) {
