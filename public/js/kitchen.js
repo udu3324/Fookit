@@ -17,6 +17,38 @@ socket.on("kitchen_add_objective", (objective) => {
     dishObjective = objective;
 });
 
+//finish the objective
+function finishObjective() {
+    socket.emit("kitchen_finished_objective", callback => {
+        console.log('kitchen_finished_objective:', callback);
+    });
+}
+
+//temp
+function countOccurrences(arr) {
+    const occurrences = {};
+    for (const item of arr) {
+      occurrences[item] = (occurrences[item] || 0) + 1;
+    }
+    return occurrences;
+  }
+  
+  function checkArraysContainSameQuantities(arr1, arr2) {
+    const occurrences1 = countOccurrences(arr1);
+    const occurrences2 = countOccurrences(arr2);
+  
+    // Compare the occurrences of each element in Array 1 with those in Array 2
+    for (const item of Object.keys(occurrences1)) {
+      if (occurrences2[item] !== occurrences1[item]) {
+        return false;
+      }
+    }
+  
+    // If we reach this point, it means all elements in Array 1 have the same occurrences in Array 2
+    return true;
+  }
+//temp
+
 //gets new ingredients and display/animate on screen
 let itemID = 1;
 socket.on("kitchen_add_ingredient", (ingredient, slide) => {
@@ -43,7 +75,16 @@ socket.on("kitchen_return_menu", () => {
 });
 
 //stack ingredient onto dish
+let allowedToSubmit = false;
 function stackIngredient(element) {
+    //check if the ingredient is in the next objective item
+    let current = currentStack.length;
+    if (dishObjective[current] !== element.classList[1]) return;
+
+    //push to array
+    currentStack.push(element.classList[1]);
+
+    //remove original item and create new one in dish div
     var item = document.createElement('div');
     item.classList.add('sprite');
     item.classList.add(element.classList[1]);
@@ -51,6 +92,12 @@ function stackIngredient(element) {
     kitchenPlate.appendChild(item);
 
     element.remove();
+
+    //check if submitting is allowed
+    if (currentStack.toString() == dishObjective.toString()) {
+        console.log("allowed to submit!");
+        allowedToSubmit = true;
+    }
 }
 
 //simple drag div function - ty w3schools and gpt
@@ -104,26 +151,27 @@ function dragElement(elmnt) {
         //check for out of bounds
         if (pxToInt(elmnt.style.top) < 0) {
             elmnt.style.top = "0px";
-        }
+
+            //if user is dragging finished plate to top
+            if (allowedToSubmit && elmnt == kitchenPlate) {
+                console.log("finishing objective");
+                finishObjective();
+                allowedToSubmit = false;
+            }
+        } //top
         if (pxToInt(elmnt.style.top) > window.innerHeight - 128) {
             elmnt.style.top = (window.innerHeight - 128) + "px";
-        }
+        } //bottom
         if (pxToInt(elmnt.style.left) < 0) {
             elmnt.style.left = "0px";
-        }
+        } //left
         if (pxToInt(elmnt.style.left) > window.innerWidth - 128) {
             elmnt.style.left = (window.innerWidth - 128) + "px";
-        }
+        } //right
 
-        //check for collision
+        //check for collision between item and plate
         if (isColliding(kitchenPlate, elmnt) && elmnt !== kitchenPlate) {
-            //check if the ingredient is in the next objective item
-            let current = currentStack.length;
-
-            if (dishObjective[current] == elmnt.classList[1]) {
-                stackIngredient(elmnt);
-                currentStack.push(elmnt.classList[1]);
-            }
+            stackIngredient(elmnt);
         }
     }
 

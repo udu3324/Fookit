@@ -161,7 +161,8 @@ io.on('connection', (socket) => {
     if (kitchen == undefined) return callback("not_in_one")
 
     //if the kitchen is too small
-    if (io.sockets.adapter.rooms.get(kitchen).size == 1) return callback("too_small")
+    //todo remove comment
+    //if (io.sockets.adapter.rooms.get(kitchen).size == 1) return callback("too_small")
     
     //send the start
     io.sockets.in(kitchen).emit("kitchen_started_code")
@@ -185,6 +186,39 @@ io.on('connection', (socket) => {
     runKitchen(kitchen)
     
     console.log('start_kitchen_code:', kitchen);
+  })
+
+  socket.on('kitchen_finished_objective', (callback) => {
+    let kitchen = getCurrentKitchen(socket)
+
+    //if they aren't in a kitchen
+    if (kitchen == undefined) return callback("not_in_one")
+
+    //if their kitchen hasn't started for some reason
+    if (!listOfStartedKitchens().includes(kitchen)) return callback("not_started")
+
+    //find the one user data in a kitchen
+    startedKitchenData(kitchen).forEach((kit, index) => {
+      //dont use first two indexes, and make sure its the right user
+      if (index < 2) return;
+      if (kit[0] !== socket.id) return;
+      
+      //check if they do in fact have the objective items in their inventory
+      let verified = dish.checkIngredientQuantities(kit[1], kit[3]);
+      
+      if (verified) {
+        //remove things that were used in objective
+        kit[3] = kit[3].filter(item => !kit[1].includes(item));
+  
+        //remove objective
+        kit[1] = [];
+  
+        //todo
+        callback(`good`);
+      } else {
+        callback(`cheater`)
+      }
+    });
   })
 })
 
@@ -291,6 +325,9 @@ async function runKitchen(code) {
     let thing = setInterval(function() {
       console.log("giving a " + objectiveItems[on] + " to " + kit[0])
       io.to(kit[0]).emit("kitchen_add_ingredient", objectiveItems[on], "top")
+      
+      //add to their list of ingredients to verify later
+      kit[3].push(objectiveItems[on]);
 
       if (on == 3) clearInterval(thing);
       on++;
