@@ -35,11 +35,24 @@ function resizeCanvas() {
             e.style.left = midW;
             e.style.top = midH;
         }
-        if (width > window.innerWidth - 129 || height > window.innerHeight - 129) {
+        if (width > window.innerWidth - e.offsetWidth || height > window.innerHeight - e.offsetHeight) {
             e.style.left = midW;
             e.style.top = midH;
         }
     });
+
+    //for the kitchen sticky
+    let width = pxToInt(kitchenSticky.style.left);
+    let height = pxToInt(kitchenSticky.style.top);
+
+    if (width < 0 || height < 0) {
+        kitchenSticky.style.left = "10px";
+        kitchenSticky.style.top = "10px";
+    }
+    if (width > window.innerWidth - kitchenSticky.offsetWidth || height > window.innerHeight - kitchenSticky.offsetHeight) {
+        kitchenSticky.style.left = "10px";
+        kitchenSticky.style.top = "10px";
+    }
 }
 
 // debounce resizing every 0.250 seconds so it takes less resources

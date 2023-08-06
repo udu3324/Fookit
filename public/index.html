@@ -6,7 +6,7 @@
   </head>
   <body>
     <div id="game-container" class="w-screen h-screen">
-      <div id="mm" class="">
+      <div id="mm" class="hidden">
         <div id="mm-layout" class="grid grid-cols-5 grid-flow-col place-content-center h-screen">
           <div>
             <h1 class="text-2xl font-bold">
@@ -114,7 +114,12 @@
         </div>
       </div>
       
-      <div id="kitchen" class="hidden">
+      <div id="kitchen" class="">
+        <div id="kitchen-sticky" class="absolute top-4 left-4 w-48 h-48 p-3 bg-yellow-300 pointer-events-auto">
+          <div class="text-2xl pointer-events-none">
+            Objective jere
+          </div>
+        </div>
         <div id="kitchen-workspace" class="w-screen h-screen bg-slate-200">
           <div id="kitchen-plate" class="sprite plate"></div>
         </div>

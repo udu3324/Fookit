@@ -3,11 +3,11 @@ const http = require('http')
 const socketIO = require('socket.io')
 const path = require('path')
 
+const menu = require('./menu');
+
 const app = express()
 const server = http.createServer(app)
 const io = socketIO(server)
-
-const dish = require('./dish');
 
 const port = 3000
 
@@ -168,15 +168,15 @@ io.on('connection', (socket) => {
     io.sockets.in(kitchen).emit("kitchen_started_code")
     
     let kitArray = [
-      kitchen,
-      ["data"]
+      kitchen, //the kitchen code
+      ["data"] //todo later
     ];
     
     listOfChefs(kitchen).forEach(function(chef) {
       kitArray.push([
         chef, //socket id
-        dish.pbnj, //objective
-        [], //their tools to use (starts off with none)
+        [], //objective
+        [], //their transformers to use (starts off with none)
         [] //what ingredients they currently have
       ]);
     });
@@ -197,14 +197,14 @@ io.on('connection', (socket) => {
     //if their kitchen hasn't started for some reason
     if (!listOfStartedKitchens().includes(kitchen)) return callback("not_started")
 
-    //find the one user data in a kitchen
+    //find the chef's data
     startedKitchenData(kitchen).forEach((kit, index) => {
       //dont use first two indexes, and make sure its the right user
       if (index < 2) return;
       if (kit[0] !== socket.id) return;
       
       //check if they do in fact have the objective items in their inventory
-      let verified = dish.checkIngredientQuantities(kit[1], kit[3]);
+      let verified = menu.checkIngredientQuantities(kit[1], kit[3]);
       
       if (verified) {
         //remove things that were used in objective
@@ -213,7 +213,9 @@ io.on('connection', (socket) => {
         //remove objective
         kit[1] = [];
   
-        //todo
+        //give them new objective
+        setObjective(kit, menu.randomObjective(0))
+        
         callback(`good`);
       } else {
         callback(`cheater`)
@@ -303,6 +305,28 @@ function startedKitchenData(kitchen) {
   return list;
 }
 
+//give an ingredient to a chef
+function addIngredient(userData, ingredient) {
+  console.log("giving a " + ingredient + " to " + userData[0])
+
+  //to the chef to display
+  io.to(userData[0]).emit("kitchen_add_ingredient", ingredient, "top")
+  
+  //add to their list of ingredients to verify later
+  userData[3].push(ingredient);
+}
+
+//set the objective of a chef
+function setObjective(userData, objective) {
+  console.log("assigned " + objective + " to " + userData[0])
+  
+  //to the socket
+  io.to(userData[0]).emit("kitchen_add_objective", objective);
+
+  //store in server to verify later
+  userData[1] = objective;
+}
+
 async function runKitchen(code) {
   console.log("ok starting timer")
 
@@ -311,27 +335,21 @@ async function runKitchen(code) {
   console.log(kitchenStarted)
   console.log("size is", kitchenStarted.length)
 
-  //for each user in kitchen
-  //give everyone their objective (skip first 2 indexes)
+  //for each user in kitchen, give objective
   kitchenStarted.forEach((kit, index) => {
+    //skip first 2 indexes
     if (index < 2) return;
     
-    io.to(kit[0]).emit("kitchen_add_objective", kit[1]);
+    setObjective(kit, menu.randomObjective(0));
 
-    //give them their item periodically
-    let objectiveItems = kit[1];
-
-    let on = 0
+    //give an item every second from their objective
+    let i = 0
     let thing = setInterval(function() {
-      console.log("giving a " + objectiveItems[on] + " to " + kit[0])
-      io.to(kit[0]).emit("kitchen_add_ingredient", objectiveItems[on], "top")
-      
-      //add to their list of ingredients to verify later
-      kit[3].push(objectiveItems[on]);
+      addIngredient(kit, kit[1][i])
 
-      if (on == 3) clearInterval(thing);
-      on++;
-    }, 1000);
+      if (i == (kit[1].length - 1)) clearInterval(thing);
+      i++;
+    }, 200);
   });
 
   //next

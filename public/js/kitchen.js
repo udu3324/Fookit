@@ -4,6 +4,11 @@ const kitchenWorkspace = document.getElementById('kitchen-workspace');
 const kitchenPlate = document.getElementById('kitchen-plate');
 
 dragElement(kitchenPlate);
+
+const kitchenSticky = document.getElementById('kitchen-sticky');
+
+dragElement(kitchenSticky);
+
 //set plate middle (temp)
 kitchenPlate.style.left = (window.innerWidth / 2 - 64) + "px";
 kitchenPlate.style.top = (window.innerHeight / 2 - 64) + "px";
@@ -12,9 +17,11 @@ kitchenPlate.style.top = (window.innerHeight / 2 - 64) + "px";
 let dishObjective = [];
 let currentStack = [];
 socket.on("kitchen_add_objective", (objective) => {
-    console.log(objective)
+    console.log("new objective: ", objective)
 
     dishObjective = objective;
+
+    clearDish();
 });
 
 //finish the objective
@@ -74,9 +81,17 @@ socket.on("kitchen_return_menu", () => {
     console.log("kitchen has stopped");
 });
 
+//clear the plate
+function clearDish() {
+    kitchenPlate.replaceChildren();
+}
+
 //stack ingredient onto dish
 let allowedToSubmit = false;
 function stackIngredient(element) {
+    //stop stacking when objective is done
+    if (allowedToSubmit) return;
+
     //check if the ingredient is in the next objective item
     let current = currentStack.length;
     if (dishObjective[current] !== element.classList[1]) return;
@@ -159,14 +174,14 @@ function dragElement(elmnt) {
                 allowedToSubmit = false;
             }
         } //top
-        if (pxToInt(elmnt.style.top) > window.innerHeight - 128) {
-            elmnt.style.top = (window.innerHeight - 128) + "px";
+        if (pxToInt(elmnt.style.top) > window.innerHeight - elmnt.offsetHeight) {
+            elmnt.style.top = (window.innerHeight - elmnt.offsetHeight) + "px";
         } //bottom
         if (pxToInt(elmnt.style.left) < 0) {
             elmnt.style.left = "0px";
         } //left
-        if (pxToInt(elmnt.style.left) > window.innerWidth - 128) {
-            elmnt.style.left = (window.innerWidth - 128) + "px";
+        if (pxToInt(elmnt.style.left) > window.innerWidth - elmnt.offsetWidth) {
+            elmnt.style.left = (window.innerWidth - elmnt.offsetWidth) + "px";
         } //right
 
         //check for collision between item and plate

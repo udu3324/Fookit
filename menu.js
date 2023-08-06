@@ -1,4 +1,14 @@
-const pbnj = ["toast","jelly_jar","peanut_butter_jar","toast"]
+const menu = [
+  [
+    ["toast","jelly_jar","peanut_butter_jar","toast"], //pbnj
+    ["toast","avacado_slices"] //avacado toast
+  ]
+]
+
+function randomObjective(difficulty) {
+  //todo
+  return menu[0][0];
+}
 
 //count the occurances of each string in array (ty gpt)
 function countOccurrences(arr) {
@@ -26,6 +36,6 @@ function checkIngredientQuantities(original, compare) {
 }
 
 module.exports = Object.freeze({
-    pbnj,
-    checkIngredientQuantities
+    checkIngredientQuantities,
+    randomObjective
 });
