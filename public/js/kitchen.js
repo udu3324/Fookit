@@ -1,32 +1,45 @@
 const kitchen = document.getElementById('kitchen');
 const kitchenWorkspace = document.getElementById('kitchen-workspace');
 
-const kitchenPlate = document.getElementById('kitchen-plate');
+const kitchenStack = document.getElementById('kitchen-stack');
 
-dragElement(kitchenPlate);
+dragElement(kitchenStack);
 
 const kitchenSticky = document.getElementById('kitchen-sticky');
 
 dragElement(kitchenSticky);
 
-//set plate middle (temp)
-kitchenPlate.style.left = (window.innerWidth / 2 - 64) + "px";
-kitchenPlate.style.top = (window.innerHeight / 2 - 64) + "px";
+//set item middle (temp)
+kitchenStack.style.left = (window.innerWidth / 2 - 64) + "px";
+kitchenStack.style.top = (window.innerHeight / 2 - 64) + "px";
 
 //adds the objective from the server
 let dishObjective = [];
 let currentStack = [];
 socket.on("kitchen_add_objective", (objective) => {
-    console.log("new objective: ", objective)
+    console.log("new objective:", objective)
 
     dishObjective = objective;
 
-    clearDish();
+    //add the first one
+    currentStack.push(dishObjective[0]);
+
+    //reset classes
+    kitchenStack.className = "";
+    kitchenStack.classList.add('sprite');
+    kitchenStack.classList.add(dishObjective[0]);
+
+    //remove everything from the div stack
+    kitchenStack.replaceChildren();
 });
 
 //finish the objective
 function finishObjective() {
     socket.emit("kitchen_finished_objective", callback => {
+        //reset stack classes
+        kitchenStack.className = "";
+        kitchenStack.classList.add('sprite');
+
         console.log('kitchen_finished_objective:', callback);
     });
 }
@@ -59,6 +72,12 @@ function countOccurrences(arr) {
 //gets new ingredients and display/animate on screen
 let itemID = 1;
 socket.on("kitchen_add_ingredient", (ingredient, slide) => {
+    //it is used as a first thing (plate/bowl)
+    if (currentStack[0] == ingredient) {
+        console.log("first is", ingredient)
+        return;
+    }
+
     console.log(ingredient, slide)
 
     var item = document.createElement('div');
@@ -81,11 +100,6 @@ socket.on("kitchen_return_menu", () => {
     console.log("kitchen has stopped");
 });
 
-//clear the plate
-function clearDish() {
-    kitchenPlate.replaceChildren();
-}
-
 //stack ingredient onto dish
 let allowedToSubmit = false;
 function stackIngredient(element) {
@@ -104,7 +118,7 @@ function stackIngredient(element) {
     item.classList.add('sprite');
     item.classList.add(element.classList[1]);
 
-    kitchenPlate.appendChild(item);
+    kitchenStack.appendChild(item);
 
     element.remove();
 
@@ -168,7 +182,7 @@ function dragElement(elmnt) {
             elmnt.style.top = "0px";
 
             //if user is dragging finished plate to top
-            if (allowedToSubmit && elmnt == kitchenPlate) {
+            if (allowedToSubmit && elmnt == kitchenStack) {
                 console.log("finishing objective");
                 finishObjective();
                 allowedToSubmit = false;
@@ -185,7 +199,7 @@ function dragElement(elmnt) {
         } //right
 
         //check for collision between item and plate
-        if (isColliding(kitchenPlate, elmnt) && elmnt !== kitchenPlate) {
+        if (isColliding(kitchenStack, elmnt) && elmnt !== kitchenStack) {
             stackIngredient(elmnt);
         }
     }

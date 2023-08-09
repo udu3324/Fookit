@@ -1,7 +1,10 @@
+const plate = "plate";
+const bowl = "bowl";
+
 const menu = [
   [
-    ["toast","jelly_jar","peanut_butter_jar","toast"], //pbnj
-    ["toast","avacado_slices"] //avacado toast
+    [plate, "toast", "jelly", "peanut_butter", "toast"], //pbnj
+    [plate, "toast", "avacado_slices"] //avacado toast
   ]
 ]
 

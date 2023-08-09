@@ -31,21 +31,41 @@ body {
 }
 
 .plate {
-    background-position: 0px 0px;
+    background-position: -128px 0px;
+}
+
+.bowl {
+    background-position: -256px 0px;
 }
 
 .toast {
     background-position: 0px -128px;
 }
 
+.slice_of_bread {
+    background-position: 0px -256px;
+}
+
 .jelly_jar {
     background-position: -128px -128px;
+}
+
+.jelly {
+    background-position: -128px -256px;
 }
 
 .peanut_butter_jar {
     background-position: -256px -128px;
 }
 
+.peanut_butter {
+    background-position: -256px -256px;
+}
+
 .avacado_slices {
     background-position: -384px -128px;
+}
+
+.avacado {
+    background-position: -384px -256px;
 }
