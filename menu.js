@@ -4,13 +4,13 @@ const bowl = "bowl";
 const menu = [
   [
     [plate, "toast", "jelly", "peanut_butter", "toast"], //pbnj
-    [plate, "toast", "avacado_slices"] //avacado toast
+    [bowl, "toast", "avacado_slices"] //avacado toast
   ]
 ]
 
 function randomObjective(difficulty) {
   //todo
-  return menu[0][0];
+  return menu[0][difficulty];
 }
 
 //count the occurances of each string in array (ty gpt)

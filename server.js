@@ -214,7 +214,7 @@ io.on('connection', (socket) => {
         kit[1] = [];
   
         //give them new objective
-        setObjective(kit, menu.randomObjective(0))
+        setObjective(kit, menu.randomObjective(1))
         
         callback(`good`);
       } else {

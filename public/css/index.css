@@ -30,6 +30,13 @@ body {
     position: absolute;
 }
 
+.sticky_display {
+    width: 80px;
+    height: 80px;
+    background-size: 385px;
+    background-image: url(../img/sprite.png);
+}
+/* 0px -96px */
 .plate {
     background-position: -128px 0px;
 }

@@ -2,11 +2,10 @@ const kitchen = document.getElementById('kitchen');
 const kitchenWorkspace = document.getElementById('kitchen-workspace');
 
 const kitchenStack = document.getElementById('kitchen-stack');
-
 dragElement(kitchenStack);
 
+const kitchenStickyText = document.getElementById('kitchen-sticky-txt');
 const kitchenSticky = document.getElementById('kitchen-sticky');
-
 dragElement(kitchenSticky);
 
 //set item middle (temp)
@@ -21,24 +20,33 @@ socket.on("kitchen_add_objective", (objective) => {
 
     dishObjective = objective;
 
-    //add the first one
-    currentStack.push(dishObjective[0]);
+    //reset current stack, add first one
+    currentStack = [dishObjective[0]];
 
     //reset classes
     kitchenStack.className = "";
     kitchenStack.classList.add('sprite');
     kitchenStack.classList.add(dishObjective[0]);
 
-    //remove everything from the div stack
+    //remove everything from the div stack & sticky
     kitchenStack.replaceChildren();
+    kitchenStickyText.replaceChildren();
+
+    for (let i = 0; i < (dishObjective.length - 1); i++) {
+        let objText = document.createElement('div');
+
+        item.id = itemID;
+        item.classList.add('sprite');
+        item.classList.add(ingredient);
+
+        kitchenWorkspace.appendChild(item);
+    }
 });
 
 //finish the objective
 function finishObjective() {
     socket.emit("kitchen_finished_objective", callback => {
-        //reset stack classes
-        kitchenStack.className = "";
-        kitchenStack.classList.add('sprite');
+        //todo handle error cheater
 
         console.log('kitchen_finished_objective:', callback);
     });
@@ -80,7 +88,7 @@ socket.on("kitchen_add_ingredient", (ingredient, slide) => {
 
     console.log(ingredient, slide)
 
-    var item = document.createElement('div');
+    let item = document.createElement('div');
 
     item.id = itemID;
     item.classList.add('sprite');
@@ -114,7 +122,7 @@ function stackIngredient(element) {
     currentStack.push(element.classList[1]);
 
     //remove original item and create new one in dish div
-    var item = document.createElement('div');
+    let item = document.createElement('div');
     item.classList.add('sprite');
     item.classList.add(element.classList[1]);
 
